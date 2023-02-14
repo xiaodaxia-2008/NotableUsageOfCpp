@@ -1,0 +1,5 @@
+file(GLOB srcs CONFIGURE_DEPENDS ${CMAKE_CURRENT_LIST_DIR}/*.h ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+set(CMAKE_AUTOMOC ON)
+set(target_name qthread_usage)
+add_executable(${target_name} ${srcs})
+target_link_libraries(${target_name} PRIVATE spdlog::spdlog range-v3::range-v3 fmt::fmt Boost::boost Qt::Widgets)
