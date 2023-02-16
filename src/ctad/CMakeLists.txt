@@ -1,0 +1,1 @@
+add_executable(ctad_example ctad_example.cpp)

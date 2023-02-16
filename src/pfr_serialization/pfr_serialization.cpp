@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <array>
 
 namespace pfr = boost::pfr;
 
@@ -38,7 +39,7 @@ struct some_person
 };
 
 template <typename T>
-    requires std::is_aggregate_v<T> && (!fmt::detail::is_streamable<T, char>::value)
+    requires std::is_aggregate_v<T> && (!fmt::detail::is_streamable<T, char>::value) && std::is_class_v<T>
 struct fmt::formatter<T> : fmt::formatter<std::string>
 {
     template <typename FormatContext> auto format(const T &m, FormatContext &ctx)
@@ -68,6 +69,10 @@ int main(int argc, char **argv)
     fmt::print("size of some_persion: {}\n", pfr::tuple_size_v<some_person>);
     fmt::print("{}\n", person);
     fmt::print("{}\n", shop);
+    std::is_aggregate_v<char[20]>;
+    std::is_class_v<char[20]>;
+    std::is_class_v<std::array<double, 3>>;
+    constexpr bool v = std::is_aggregate_v<std::array<double, 3>>;
 
     auto fname = std::filesystem::current_path() / "ser.data";
 
