@@ -2,6 +2,7 @@ add_subdirectory(qt_examples)
 add_subdirectory(gcode_parser)
 add_subdirectory(pfr_serialization)
 add_subdirectory(ctad)
+add_subdirectory(zpp_serialization)
 
 add_executable(eigen_fmt eigen_fmt.cpp)
 target_link_libraries(eigen_fmt PRIVATE Eigen3::Eigen fmt::fmt spdlog::spdlog)
