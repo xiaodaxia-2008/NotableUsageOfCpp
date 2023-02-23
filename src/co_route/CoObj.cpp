@@ -5,6 +5,17 @@
 
 #include <coroutine>
 
+tl::generator<int> K()
+{
+    int k = 0;
+    while (k < 10)
+    {
+        SPDLOG_INFO("co_yield k: {}", k);
+        co_yield k;
+        k += 2;
+    }
+}
+
 tl::generator<int> F()
 {
     SPDLOG_INFO("init coroutine");
@@ -16,7 +27,11 @@ tl::generator<int> F()
     SPDLOG_INFO("co_yield i: {}", i);
     co_yield i;
     SPDLOG_INFO("after co_yield i: {}", i);
-    co_return;
+    auto gen = K();
+    for (auto &&v : gen)
+    {
+        co_yield v;
+    }
 }
 
 CoObj::CoObj()
