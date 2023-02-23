@@ -29,12 +29,16 @@ template <> struct fmt::formatter<MyData> : fmt::formatter<std::string>
     }
 };
 
-template <> struct fmt::formatter<MyExtendData> : fmt::formatter<std::string>
+template <> struct fmt::formatter<MyExtendData>
 {
     template <typename FormatContext> auto format(const MyExtendData &m, FormatContext &ctx)
     {
         return fmt::format_to(ctx.out(), "<MyExtendData at {}, name: {}, vec_dbl: {}, umap: {}, extend_value: {}>",
                               fmt::ptr(&m), m.name, m.vec_dbl, m.umap, m.extend_value);
+    }
+    constexpr auto parse(auto &ctx) -> decltype(ctx.begin())
+    {
+        return ctx.end();
     }
 };
 
