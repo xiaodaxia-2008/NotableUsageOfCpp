@@ -6,6 +6,7 @@ add_subdirectory(zpp_serialization)
 add_subdirectory(co_route)
 add_subdirectory(bin_search)
 add_subdirectory(embed_script)
+add_subdirectory(pose_interpolation)
 
 add_executable(eigen_fmt eigen_fmt.cpp)
 target_link_libraries(eigen_fmt PRIVATE Eigen3::Eigen fmt::fmt spdlog::spdlog)
