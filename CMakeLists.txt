@@ -34,4 +34,6 @@ find_package(Qt6 CONFIG COMPONENTS Widgets)
 find_package(cereal CONFIG)
 find_package(Eigen3 CONFIG)
 
+link_libraries(spdlog::spdlog)
+
 add_subdirectory(src)
