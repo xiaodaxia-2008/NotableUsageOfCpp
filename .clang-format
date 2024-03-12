@@ -38,7 +38,7 @@ AlignAfterOpenBracket: Align
 #等号两边的空格
 SpaceBeforeAssignmentOperators: true
 # If ``true``, spaces will be inserted after '<' and before '>' in template argument lists
-SortIncludes: false
+SortIncludes: true
 # false表示所有形参要么都在同一行，要么都各自一行
 BinPackParameters:	true
 # BinPackArguments: false

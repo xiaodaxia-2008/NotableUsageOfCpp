@@ -9,6 +9,7 @@ add_subdirectory(bin_search)
 add_subdirectory(pose_interpolation)
 add_subdirectory(eigen_usage)
 add_subdirectory(stl_examples)
+add_subdirectory(boost_ser)
 
 add_executable(cereal_serialization cereal_serialization.cpp)
 target_link_libraries(cereal_serialization PRIVATE cereal::cereal fmt::fmt spdlog::spdlog)
