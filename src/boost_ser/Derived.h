@@ -6,6 +6,7 @@
 #include <deque>
 
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/split_member.hpp>
 
 class DUMMY_DERIVED_EXPORT Derived : public Base
 {
@@ -22,11 +23,19 @@ public:
 
     virtual std::string print() const;
 
-    void serialize(auto &ar, const unsigned int)
+    void load(auto &ar, const unsigned int)
     {
         ar &BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
         ar &BOOST_SERIALIZATION_NVP(queue);
     }
+
+    void save(auto &ar, const unsigned int) const
+    {
+        ar &BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
+        ar &BOOST_SERIALIZATION_NVP(queue);
+    }
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 
     std::deque<int> queue{1, 2, 3};
 };
