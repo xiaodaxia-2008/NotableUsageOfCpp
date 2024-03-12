@@ -16,7 +16,7 @@
 #include <boost/serialization/weak_ptr.hpp>
 
 
-BOOST_CLASS_EXPORT_GUID(Base, "Base")
+// BOOST_CLASS_EXPORT_GUID(Base, "Base")
 
 void Base::save(std::ostream &oss)
 {

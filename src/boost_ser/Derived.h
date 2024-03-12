@@ -6,6 +6,7 @@
 #include <deque>
 
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/split_free.hpp>
 #include <boost/serialization/split_member.hpp>
 
 class DUMMY_DERIVED_EXPORT Derived : public Base
@@ -23,20 +24,6 @@ public:
 
     virtual std::string print() const;
 
-    void load(auto &ar, const unsigned int)
-    {
-        ar &BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
-        ar &BOOST_SERIALIZATION_NVP(queue);
-    }
-
-    void save(auto &ar, const unsigned int) const
-    {
-        ar &BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
-        ar &BOOST_SERIALIZATION_NVP(queue);
-    }
-
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
-
     std::deque<int> queue{1, 2, 3};
 };
 
@@ -49,3 +36,23 @@ struct fmt::formatter<Derived> : formatter<Base> {
             fmt::ptr(&d), d.i, d.f, d.dict, d.queue);
     }
 };
+
+namespace boost::serialization
+{
+void load(auto &ar, Derived &d, const unsigned int)
+{
+    ar &boost::serialization::make_nvp(
+        "Base", boost::serialization::base_object<Base>(d));
+    ar &BOOST_SERIALIZATION_NVP(d.queue);
+}
+
+void save(auto &ar, const Derived &d, const unsigned int)
+{
+    ar &boost::serialization::make_nvp(
+        "Base", boost::serialization::base_object<Base>(d));
+    ar &BOOST_SERIALIZATION_NVP(d.queue);
+}
+
+} // namespace boost::serialization
+
+BOOST_SERIALIZATION_SPLIT_FREE(Derived)
