@@ -3,13 +3,30 @@
 
 #include <boost/serialization/nvp.hpp>
 
-#include <vector>
-#include <string>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
+
 
 #include <fmt/format.h>
 #include <fmt/ranges.h>
+
+// template <typename Archive, typename... Ts>
+// void ser1(Archive &ar, Ts &&...args)
+// {
+//     // ar &... &args;
+//     auto dummy = {(ar & BOOST_SERIALIZATION_NVP(args), 0)...};
+// }
+
+// template <typename Archive, typename T, typename... Ts>
+// void ser(Archive &ar, T &&t, Ts &&...args)
+// {
+//     if constexpr (sizeof...(Ts) >= 1)
+//         ser(ar & t, args...);
+//     else
+//         ar & t;
+// }
 
 class DUMMY_BASE_EXPORT Base : public std::enable_shared_from_this<Base>
 {
@@ -25,14 +42,14 @@ public:
 
     virtual std::string print() const;
 
-    void save(std::ostream &oss);
-
-    static std::shared_ptr<Base> load(std::istream &iss);
+    void save(auto &ar);
+    static std::shared_ptr<Base> load(auto &ar);
 
     void serialize(auto &ar, const unsigned int /*version*/)
     {
         ar &BOOST_SERIALIZATION_NVP(i) & BOOST_SERIALIZATION_NVP(f)
             & BOOST_SERIALIZATION_NVP(dict);
+        // ser(ar, i, f, dict);
     }
 
     int i;

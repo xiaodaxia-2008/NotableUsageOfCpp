@@ -1,9 +1,5 @@
 #include "Base.h"
 
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/deque.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/map.hpp>
@@ -15,20 +11,39 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/weak_ptr.hpp>
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+
 
 // BOOST_CLASS_EXPORT_GUID(Base, "Base")
 
-void Base::save(std::ostream &oss)
+void Base::save(auto &ar)
 {
-    boost::archive::xml_oarchive oa(oss);
     auto sptr = shared_from_this();
-    oa << boost::serialization::make_nvp("BaseObject", sptr);
+    ar &boost::serialization::make_nvp("BaseObject", sptr);
 }
 
-std::shared_ptr<Base> Base::load(std::istream &iss)
+std::shared_ptr<Base> Base::load(auto &ar)
 {
     std::shared_ptr<Base> b;
-    boost::archive::xml_iarchive ia(iss);
-    ia >> BOOST_SERIALIZATION_NVP(b);
+    ar &boost::serialization::make_nvp("BaseObject", b);
     return b;
 }
+
+template DUMMY_BASE_EXPORT void
+Base::save<boost::archive::text_oarchive>(boost::archive::text_oarchive &);
+template DUMMY_BASE_EXPORT void
+Base::save<boost::archive::binary_oarchive>(boost::archive::binary_oarchive &);
+template DUMMY_BASE_EXPORT void
+Base::save<boost::archive::xml_oarchive>(boost::archive::xml_oarchive &);
+
+template DUMMY_BASE_EXPORT std::shared_ptr<Base>
+Base::load<boost::archive::text_iarchive>(boost::archive::text_iarchive &);
+template DUMMY_BASE_EXPORT std::shared_ptr<Base>
+Base::load<boost::archive::binary_iarchive>(boost::archive::binary_iarchive &);
+template DUMMY_BASE_EXPORT std::shared_ptr<Base>
+Base::load<boost::archive::xml_iarchive>(boost::archive::xml_iarchive &);

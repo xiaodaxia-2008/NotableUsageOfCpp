@@ -24,6 +24,12 @@ public:
 
     virtual std::string print() const;
 
+    // void serialize(auto &ar, const unsigned int)
+    // {
+    //     ar &boost::serialization::base_object<Base>(*this);
+    //     ar & queue;
+    // }
+
     std::deque<int> queue{1, 2, 3};
 };
 
