@@ -13,25 +13,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-project(Temp VERSION 0.0.0 DESCRIPTION "Instroduction about Temp")
-
-find_program(CCACHE_PROGRAM ccache)
-
-if(CCACHE_PROGRAM)
-  message(STATUS "Found ccache")
-  set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-  set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-endif()
-
-set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/Programs/Temp" CACHE PATH "install prefix")
-
-find_package(range-v3 CONFIG)
-find_package(spdlog CONFIG)
-find_package(fmt CONFIG)
-find_package(Boost)
-find_package(Qt6 CONFIG COMPONENTS Widgets)
-find_package(cereal CONFIG)
-find_package(Eigen3 CONFIG)
+project(NotableUsageOfCpp VERSION 1.0.0 DESCRIPTION "Some classic usage of C++")
 
 link_libraries(spdlog::spdlog)
 
