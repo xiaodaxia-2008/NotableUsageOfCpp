@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.13)
 
 option(BUILD_SHARED_LIBS "build shared libs" OFF)
 
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "build type, Release/Debug/MinSizeRel/RelWithDebInfo")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
