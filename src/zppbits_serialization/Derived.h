@@ -7,6 +7,8 @@
 
 class ZPPBITS_DUMMY_LIB_DERIVED_EXPORT Derived : public Base
 {
+    RTTR_ENABLE(Base)
+
 public:
     Derived() = default;
 
@@ -19,6 +21,9 @@ public:
     ~Derived();
 
     // void serialize(auto &ar, const unsigned int);
+
+    void save(OutputArchive &ar) const override;
+    void load(InputArchive &ar) override;
 
     void format(fmt::format_context &ctx) const override
     {

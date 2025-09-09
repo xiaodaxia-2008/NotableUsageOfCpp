@@ -10,11 +10,13 @@
 #include <fmt/format.h>
 #include <fmt/ranges.h>
 
-#include <zpp_bits.h>
+#include "archive.h"
 
 class ZPPBITS_DUMMY_LIB_BASE_EXPORT Base
     : public std::enable_shared_from_this<Base>
 {
+    RTTR_ENABLE()
+
 public:
     Base() = default;
 
@@ -27,6 +29,9 @@ public:
 
     // void serialize(auto &ar, const unsigned int /*version*/);
 
+    virtual void save(OutputArchive &ar) const;
+    virtual void load(InputArchive &ar);
+
     virtual void format(fmt::format_context &ctx) const
     {
         fmt::format_to(ctx.out(), "<Base at {}, i: {}, f: {:.4f}, dict: {}>",
@@ -37,10 +42,6 @@ protected:
     int i;
     float f;
     std::map<int, std::string> dict;
-
-private:
-    friend struct zpp::bits::access;
-    using serialize = zpp::bits::members<2>;
 };
 
 template <std::derived_from<Base> T>

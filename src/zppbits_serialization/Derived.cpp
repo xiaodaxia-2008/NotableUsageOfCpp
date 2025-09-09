@@ -2,17 +2,24 @@
 
 #include <zpp_bits.h>
 
+#include <rttr/registration>
+
 Derived::~Derived() {}
 
-// void Derived::serialize(auto &ar, const unsigned int)
-// {
-//     ar(static_cast<Base &>(*this), queue);
-// }
+void Derived::save(OutputArchive &ar) const
+{
+    Base::save(ar);
+    ar(queue);
+}
 
-// template ZPPBITS_DUMMY_LIB_DERIVED_EXPORT void
-// Derived::serialize<zpp::bits::in<std::vector<std::byte>>>(
-//     zpp::bits::in<std::vector<std::byte>> &ar, const unsigned int);
+void Derived::load(InputArchive &ar)
+{
+    Base::load(ar);
+    ar(queue);
+}
 
-// template ZPPBITS_DUMMY_LIB_DERIVED_EXPORT void
-// Derived::serialize<zpp::bits::out<std::vector<std::byte>>>(
-//     zpp::bits::out<std::vector<std::byte>> &ar, const unsigned int);
+RTTR_REGISTRATION
+{
+    rttr::registration::class_<Derived>("Derived").constructor<>()(
+        rttr::policy::ctor::as_std_shared_ptr);
+}
