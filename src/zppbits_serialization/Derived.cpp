@@ -1,25 +1,17 @@
 #include "Derived.h"
 
-#include <zpp_bits.h>
-
-#include <rttr/registration>
+#include "Archive.h"
 
 DerivedNode::~DerivedNode() {}
 
-void DerivedNode::save(OutputArchive &ar) const
+void DerivedNode::serialize(OutArchive &ar) const
 {
-    BaseNode::save(ar);
-    ar(queue);
+    BaseNode::serialize(ar);
+    ar(m_position);
 }
 
-void DerivedNode::load(InputArchive &ar)
+void DerivedNode::serialize(InArchive &ar)
 {
-    BaseNode::load(ar);
-    ar(queue);
-}
-
-RTTR_REGISTRATION
-{
-    rttr::registration::class_<DerivedNode>("Derived").constructor<>()(
-        rttr::policy::ctor::as_std_shared_ptr);
+    BaseNode::serialize(ar);
+    ar(m_position);
 }

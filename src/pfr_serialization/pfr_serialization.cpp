@@ -54,7 +54,7 @@ struct fmt::formatter<T> : fmt::formatter<std::string>
 
 namespace cereal
 {
-template <class Archive, class T>
+template <class OutArchive, class T>
     requires std::is_aggregate_v<T>
 void serialize(Archive &ar, T &o)
 {

@@ -1,44 +1,99 @@
 #pragma once
 #include <zpp_bits.h>
 
-#include <rttr/type>
 #include <spdlog/spdlog.h>
 
-template <bool IsOutput>
-class Archive
-{
-    using TArchive =
-        std::conditional_t<IsOutput, zpp::bits::out<>, zpp::bits::in<>>;
+#include <map>
+#include <sstream>
+#include <variant>
 
-    TArchive ar;
+class OutArchive : public zpp::bits::out<>
+{
+    using TData = std::vector<std::byte>;
+
+    std::map<std::string, std::function<void *()>> constructors;
 
 public:
-    constexpr Archive(TArchive ar) : ar{std::move(ar)} {}
+    using zpp::bits::out<>::out;
+    using zpp::bits::out<>::operator();
 
-    constexpr auto operator()(auto &&...items)
+    void RegisterConstructor(std::string name,
+                             std::function<void *()> constructor)
     {
-        return ar(std::forward<decltype(items)>(items)...);
+        constructors[std::move(name)] = std::move(constructor);
     }
 
     template <typename T>
-    constexpr auto operator()(std::shared_ptr<T> &item)
+    T *Create(const std::string &name)
     {
-        if constexpr (IsOutput) {
-            spdlog::info("Serializing {}", typeid(*item).name());
-            std::string type_name{rttr::type::get(*item).get_name()};
-            spdlog::info("Serializing {}", type_name);
-            ar(type_name);
-            item->save(*this);
+        if (constructors.contains(name)) {
+            return static_cast<T *>(constructors[name]());
         } else {
-            std::string type_name;
-            ar(type_name);
-            spdlog::info("Deserializing {}", type_name);
-            auto type = rttr::type::get_by_name(type_name);
-            item = type.create().get_value<std::shared_ptr<T>>();
-            item->load(*this);
+            throw std::runtime_error("No constructor for " + name);
         }
+    }
+
+    template <typename T>
+    zpp::bits::errc serialize_one(const std::weak_ptr<T> &item)
+    {
+        // (*this)(reinterpret_cast<std::uintptr_t>(item.lock().get()));
+        return serialize_one(reinterpret_cast<std::uintptr_t>(item.lock().get()));
+    }
+
+    // template <typename T>
+    // void operator()(const std::weak_ptr<T> &item)
+    // {
+    //     (*this)(reinterpret_cast<std::uintptr_t>(item.lock().get()));
+    // }
+
+    template <typename T>
+    void operator()(const std::shared_ptr<T> &item)
+    {
+        std::string type_name = typeid(*item).name();
+        spdlog::info("Serializing {}", type_name);
+        (*this)(type_name);
+        item->serialize(*this);
     }
 };
 
-using OutputArchive = Archive<true>;
-using InputArchive = Archive<false>;
+class InArchive : public zpp::bits::in<>
+{
+    using TData = std::vector<std::byte>;
+
+    std::map<std::string, std::function<void *()>> constructors;
+
+public:
+    using zpp::bits::in<>::in;
+    using zpp::bits::in<>::operator();
+
+    void RegisterConstructor(std::string name,
+                             std::function<void *()> constructor)
+    {
+        constructors[std::move(name)] = std::move(constructor);
+    }
+
+    template <typename T>
+    T *Create(const std::string &name)
+    {
+        if (constructors.contains(name)) {
+            return static_cast<T *>(constructors[name]());
+        } else {
+            throw std::runtime_error("No constructor for " + name);
+        }
+    }
+
+    template <typename T>
+    void operator()(std::weak_ptr<T> &item)
+    {
+        (*this)(reinterpret_cast<std::uintptr_t>(item.lock().get()));
+    }
+
+    template <typename T>
+    void operator()(std::shared_ptr<T> &item)
+    {
+        std::string type_name;
+        (*this)(type_name);
+        spdlog::info("Deserializing {}", type_name);
+        item->serialize(*this);
+    }
+};

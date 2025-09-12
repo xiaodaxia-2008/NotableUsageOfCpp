@@ -1,7 +1,5 @@
 #pragma once
-#include <zppbits_dummy_lib_base_export.h>
-
-#include "Archive.h"
+#include <bitsery_lib_base_export.h>
 
 #include <iostream>
 #include <map>
@@ -15,7 +13,7 @@
 public:                                                                        \
     virtual std::string_view GetClassName() const { return #T; }
 
-class ZPPBITS_DUMMY_LIB_BASE_EXPORT BaseNode
+class BITSERY_LIB_BASE_EXPORT BaseNode
     : public std::enable_shared_from_this<BaseNode>
 {
     SIMPLE_REFLECTION(BaseNode)
@@ -57,20 +55,18 @@ public:
 
     std::size_t GetChildrenCount() const { return m_children.size(); }
 
-    virtual void serialize(OutArchive &ar) const;
-
-    virtual void serialize(InArchive &ar);
+    void serialize(auto &ar);
 
     virtual void format(fmt::format_context &ctx) const
     {
         auto parent = GetParent();
         fmt::format_to(ctx.out(), "<{} {} at {} with {} children, parent {}>",
-                       GetClassName(), GetName(), fmt::ptr(this),
+                       GetClassName(), fmt::ptr(this), GetName(),
                        GetChildrenCount(), parent ? parent->GetName() : "null");
     }
 
 protected:
-    std::string m_name{"Node"};
+    std::string m_name{"BaseNode"};
 
     std::vector<std::shared_ptr<BaseNode>> m_children;
 

@@ -1,30 +1,17 @@
 #include "Base.h"
-
-#include <zpp_bits.h>
-
-#include <rttr/registration>
+#include "Archive.h"
 
 BaseNode::~BaseNode() {}
 
-void BaseNode::save(OutputArchive &ar) const { ar(i, f, dict); }
-
-void BaseNode::load(InputArchive &ar) { ar(i, f, dict); }
-
-// void Base::serialize(auto &ar, const unsigned int /*version*/)
-// {
-//     ar(i, f, dict);
-// }
-
-// template ZPPBITS_DUMMY_LIB_BASE_EXPORT void
-// Base::serialize<zpp::bits::in<std::vector<std::byte>>>(
-//     zpp::bits::in<std::vector<std::byte>> &, const unsigned int);
-
-// template ZPPBITS_DUMMY_LIB_BASE_EXPORT void
-// Base::serialize<zpp::bits::out<std::vector<std::byte>>>(
-//     zpp::bits::out<std::vector<std::byte>> &, const unsigned int);
-
-RTTR_REGISTRATION
+void BaseNode::serialize(OutArchive &ar) const
 {
-    rttr::registration::class_<BaseNode>("Base").constructor<>()(
-        rttr::policy::ctor::as_std_shared_ptr);
+    // ar(m_name, m_children, m_parent);
+    ar(m_name);
+    ar(m_parent);
+}
+
+void BaseNode::serialize(InArchive &ar)
+{
+    ar(m_name);
+    ar(m_parent);
 }
