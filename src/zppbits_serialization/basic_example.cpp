@@ -1,11 +1,11 @@
 #include <zpp_bits.h>
 
-#include <spdlog/spdlog.h>
 #include <fmt/ranges.h>
+#include <spdlog/spdlog.h>
 
+#include <deque>
 #include <iostream>
 #include <string>
-#include <deque>
 
 struct Person {
     int age{13};
@@ -47,6 +47,21 @@ int main()
     std::deque<int> queue1;
     in(queue1);
     SPDLOG_INFO("queue1: {}", queue1);
+
+    auto z = std::make_shared<Person>(12, "Zen's");
+    std::shared_ptr<Person> znull;
+    out(znull);
+    out(z);
+    SPDLOG_INFO("z: {}", *z);
+
+    // out(z_weak);
+    std::shared_ptr<Person> z1, z2;
+    in(z2);
+    in(z1);
+    SPDLOG_INFO("z1: {}", fmt::ptr(z1.get()));
+    SPDLOG_INFO("z2: {}", fmt::ptr(z2.get()));
+    SPDLOG_INFO("z1: {}", *z1);
+    SPDLOG_INFO("z2: {}", fmt::ptr(z2.get()));
 
     return 0;
 }

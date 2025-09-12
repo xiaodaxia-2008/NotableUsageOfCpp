@@ -2,28 +2,28 @@
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
-#include <cereal/types/deque.hpp>
+#include <cereal/types/array.hpp>
 #include <cereal/types/memory.hpp>
 
-Derived::~Derived() {}
+DerivedNode::~DerivedNode() {}
 
-void Derived::serialize(auto &ar, const unsigned int)
+void DerivedNode::serialize(auto &ar, const unsigned int)
 {
-    ar(cereal::base_class<Base>(this), queue);
+    ar(cereal::base_class<BaseNode>(this), m_position);
 }
 
 template DUMMY_LIB_DERIVED_EXPORT void
-Derived::serialize<cereal::JSONOutputArchive>(cereal::JSONOutputArchive &ar,
-                                              const unsigned int);
+DerivedNode::serialize<cereal::JSONOutputArchive>(cereal::JSONOutputArchive &ar,
+                                                  const unsigned int);
 
 template DUMMY_LIB_DERIVED_EXPORT void
-Derived::serialize<cereal::BinaryOutputArchive>(cereal::BinaryOutputArchive &ar,
-                                                const unsigned int);
+DerivedNode::serialize<cereal::BinaryOutputArchive>(
+    cereal::BinaryOutputArchive &ar, const unsigned int);
 
 template DUMMY_LIB_DERIVED_EXPORT void
-Derived::serialize<cereal::JSONInputArchive>(cereal::JSONInputArchive &ar,
-                                             const unsigned int);
+DerivedNode::serialize<cereal::JSONInputArchive>(cereal::JSONInputArchive &ar,
+                                                 const unsigned int);
 
 template DUMMY_LIB_DERIVED_EXPORT void
-Derived::serialize<cereal::BinaryInputArchive>(cereal::BinaryInputArchive &ar,
-                                               const unsigned int);
+DerivedNode::serialize<cereal::BinaryInputArchive>(
+    cereal::BinaryInputArchive &ar, const unsigned int);

@@ -2,8 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
-#include <cereal/archives/json.hpp>
 #include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
 #include <cereal/types/memory.hpp>
 
 #include <filesystem>
@@ -14,13 +14,13 @@
 
 #include <fmt/std.h>
 
-CEREAL_REGISTER_TYPE(Derived);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Base, Derived);
+CEREAL_REGISTER_TYPE(DerivedNode);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(BaseNode, DerivedNode);
 
 void test_instance()
 {
 
-    Derived d1(1, 2.f, {{1, "one"}, {2, "two"}}, {1, 2, 3});
+    DerivedNode d1("A", {1, 2, 3});
 
     spdlog::debug("d1: {}", d1);
 
@@ -32,7 +32,7 @@ void test_instance()
 
     spdlog::info("serialized result:\n{}", ss.str());
 
-    Derived d2;
+    DerivedNode d2;
     {
         cereal::JSONInputArchive ar(ss);
         ar(d2);
@@ -42,33 +42,33 @@ void test_instance()
 
 void test_shared_ptr()
 {
-    std::shared_ptr<Base> d1 = std::make_shared<Derived>(
-        1, 2.f, std::map<int, std::string>{{1, "one"}, {2, "two"}},
-        std::deque{1, 2, 3});
+    std::shared_ptr<BaseNode> node1 = std::make_shared<BaseNode>("Node1");
+    std::shared_ptr<BaseNode> node2 =
+        std::make_shared<DerivedNode>("Node2", std::array<float, 3>{2, 2, 2});
+    node1->AddChild(node2);
 
-    spdlog::debug("d1: {}", *d1);
+    SPDLOG_INFO("node1: {}", *node1);
 
     std::stringstream ss;
     {
         cereal::BinaryOutputArchive ar(ss);
-        ar(d1);
+        ar(node1);
     }
 
     spdlog::info("serialized result:\n{}", ss.str());
-
-    std::shared_ptr<Base> d2;
+    node1.reset();
     {
         cereal::BinaryInputArchive ar(ss);
-        ar(d2);
+        ar(node1);
     }
-    spdlog::debug("d2: {}", *d2);
+    SPDLOG_INFO("node1: {}", *node1);
 }
 
 namespace fs = std::filesystem;
 int main()
 {
     spdlog::set_level(spdlog::level::debug);
-    constexpr bool is_abstract = std::is_abstract_v<Derived>;
+    constexpr bool is_abstract = std::is_abstract_v<DerivedNode>;
 
     test_shared_ptr();
 

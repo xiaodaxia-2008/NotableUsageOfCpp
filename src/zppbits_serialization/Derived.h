@@ -5,20 +5,20 @@
 
 #include <deque>
 
-class ZPPBITS_DUMMY_LIB_DERIVED_EXPORT Derived : public Base
+class ZPPBITS_DUMMY_LIB_DERIVED_EXPORT DerivedNode : public BaseNode
 {
-    RTTR_ENABLE(Base)
+    RTTR_ENABLE(BaseNode)
 
 public:
-    Derived() = default;
+    DerivedNode() = default;
 
-    Derived(int i, float f, const std::map<int, std::string> &dict,
+    DerivedNode(int i, float f, const std::map<int, std::string> &dict,
             std::deque<int> queue)
-        : Base(i, f, dict), queue(queue)
+        : BaseNode(i, f, dict), queue(queue)
     {
     }
 
-    ~Derived();
+    ~DerivedNode();
 
     // void serialize(auto &ar, const unsigned int);
 

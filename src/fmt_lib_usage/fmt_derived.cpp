@@ -4,10 +4,10 @@
 #include <memory>
 #include <string>
 
-class Base
+class BaseNode
 {
 public:
-    virtual ~Base() = default;
+    virtual ~BaseNode() = default;
 
     // make it overrideable
     virtual void do_format(fmt::format_context &ctx) const
@@ -16,25 +16,25 @@ public:
     }
 };
 
-template <std::derived_from<Base> T>
+template <std::derived_from<BaseNode> T>
 struct fmt::formatter<T> {
     constexpr auto parse(fmt::format_parse_context &ctx) { return ctx.begin(); }
 
     template <typename FormatContext>
-    auto format(const Base &b, FormatContext &ctx) const
+    auto format(const BaseNode &b, FormatContext &ctx) const
     {
         b.do_format(ctx);
         return ctx.out();
     }
 };
 
-class Derived : public Base
+class DerivedNode : public BaseNode
 {
     std::string name_;
     int value_;
 
 public:
-    Derived(std::string name, int v) : name_(std::move(name)), value_(v) {}
+    DerivedNode(std::string name, int v) : name_(std::move(name)), value_(v) {}
 
     void do_format(fmt::format_context &ctx) const override
     {
@@ -45,8 +45,8 @@ public:
 
 int main()
 {
-    Derived d("example", 42);
-    Base &br = d;
+    DerivedNode d("example", 42);
+    BaseNode &br = d;
 
     fmt::println("{}", d);
     fmt::println("{}", br);

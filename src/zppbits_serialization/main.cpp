@@ -12,7 +12,7 @@
 
 void test_instance()
 {
-    Derived d1(1, 2.f, {{1, "one"}, {2, "two"}}, {1, 2, 3});
+    DerivedNode d1(1, 2.f, {{1, "one"}, {2, "two"}}, {1, 2, 3});
 
     spdlog::debug("d1: {}", d1);
 
@@ -21,7 +21,7 @@ void test_instance()
     oar(std::string_view{typeid(d1).name()});
     d1.save(oar);
 
-    Derived d2;
+    DerivedNode d2;
     InputArchive iar{in};
     std::string type_name;
     iar(type_name);
@@ -33,7 +33,7 @@ void test_instance()
 
 void test_shared_ptr()
 {
-    std::shared_ptr<Base> d1 = std::make_shared<Derived>(
+    std::shared_ptr<BaseNode> d1 = std::make_shared<DerivedNode>(
         1, 2.f, std::map<int, std::string>{{1, "one"}, {2, "two"}},
         std::deque{1, 2, 3});
 
@@ -43,7 +43,7 @@ void test_shared_ptr()
     OutputArchive oar{out};
     oar(d1);
 
-    std::shared_ptr<Base> d2;
+    std::shared_ptr<BaseNode> d2;
     InputArchive iar{in};
     iar(d2);
 

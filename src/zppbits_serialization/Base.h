@@ -12,20 +12,20 @@
 
 #include "archive.h"
 
-class ZPPBITS_DUMMY_LIB_BASE_EXPORT Base
-    : public std::enable_shared_from_this<Base>
+class ZPPBITS_DUMMY_LIB_BASE_EXPORT BaseNode
+    : public std::enable_shared_from_this<BaseNode>
 {
     RTTR_ENABLE()
 
 public:
-    Base() = default;
+    BaseNode() = default;
 
-    Base(int i, float f, const std::map<int, std::string> &dict)
+    BaseNode(int i, float f, const std::map<int, std::string> &dict)
         : i{i}, f{f}, dict{dict}
     {
     }
 
-    virtual ~Base();
+    virtual ~BaseNode();
 
     // void serialize(auto &ar, const unsigned int /*version*/);
 
@@ -44,11 +44,11 @@ protected:
     std::map<int, std::string> dict;
 };
 
-template <std::derived_from<Base> T>
+template <std::derived_from<BaseNode> T>
 struct fmt::formatter<T> {
     constexpr auto parse(format_parse_context &ctx) { return ctx.begin(); }
 
-    auto format(const Base &b, format_context &ctx) const
+    auto format(const BaseNode &b, format_context &ctx) const
     {
         b.format(ctx);
         return ctx.out();

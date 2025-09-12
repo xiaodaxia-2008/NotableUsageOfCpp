@@ -7,13 +7,13 @@
 
 template <typename T> using generator = tl::generator<T>;
 
-struct Base
+struct BaseNode
 {
-    Base()
+    BaseNode()
     {
         SPDLOG_INFO("construct base: {}", fmt::ptr(this));
     }
-    ~Base()
+    ~BaseNode()
     {
         SPDLOG_INFO("destruct base: {}", fmt::ptr(this));
     }
@@ -24,7 +24,7 @@ generator<int> fibonacci()
     SPDLOG_INFO("here");
     int a = 0, b = 1;
     SPDLOG_INFO("here");
-    Base base;
+    BaseNode base;
     SPDLOG_INFO("here");
     while (true)
     {

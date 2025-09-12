@@ -3,30 +3,31 @@
 
 #include <dummy_lib_derived_export.h>
 
-#include <deque>
+#include <array>
+#include <span>
 
-class DUMMY_LIB_DERIVED_EXPORT Derived : public Base
+class DUMMY_LIB_DERIVED_EXPORT DerivedNode : public BaseNode
 {
+    SIMPLE_REFLECTION(DerivedNode)
 public:
-    Derived() = default;
+    DerivedNode() = default;
 
-    Derived(int i, float f, const std::map<int, std::string> &dict,
-            std::deque<int> queue)
-        : Base(i, f, dict), queue(queue)
+    DerivedNode(std::string name, std::array<float, 3> position)
+        : BaseNode(std::move(name)), m_position(std::move(position))
     {
     }
 
-    ~Derived();
+    const std::array<float, 3> &GetPosition() const { return m_position; }
 
-    void serialize(auto &ar, const unsigned int);
-
-    void format(fmt::format_context &ctx) const override
+    void SetPosition(std::array<float, 3> position)
     {
-        fmt::format_to(ctx.out(),
-                       "<Derived at {}, i: {}, f: {:.4f}, dict: {}, queue: {}>",
-                       fmt::ptr(this), i, f, dict, queue);
+        m_position = std::move(position);
     }
+
+    ~DerivedNode();
+
+    void serialize(auto &ar, const unsigned int version);
 
 protected:
-    std::deque<int> queue{1, 2, 3};
+    std::array<float, 3> m_position;
 };

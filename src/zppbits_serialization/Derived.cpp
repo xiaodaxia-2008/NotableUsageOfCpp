@@ -4,22 +4,22 @@
 
 #include <rttr/registration>
 
-Derived::~Derived() {}
+DerivedNode::~DerivedNode() {}
 
-void Derived::save(OutputArchive &ar) const
+void DerivedNode::save(OutputArchive &ar) const
 {
-    Base::save(ar);
+    BaseNode::save(ar);
     ar(queue);
 }
 
-void Derived::load(InputArchive &ar)
+void DerivedNode::load(InputArchive &ar)
 {
-    Base::load(ar);
+    BaseNode::load(ar);
     ar(queue);
 }
 
 RTTR_REGISTRATION
 {
-    rttr::registration::class_<Derived>("Derived").constructor<>()(
+    rttr::registration::class_<DerivedNode>("Derived").constructor<>()(
         rttr::policy::ctor::as_std_shared_ptr);
 }

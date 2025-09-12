@@ -4,11 +4,11 @@
 
 #include <rttr/registration>
 
-Base::~Base() {}
+BaseNode::~BaseNode() {}
 
-void Base::save(OutputArchive &ar) const { ar(i, f, dict); }
+void BaseNode::save(OutputArchive &ar) const { ar(i, f, dict); }
 
-void Base::load(InputArchive &ar) { ar(i, f, dict); }
+void BaseNode::load(InputArchive &ar) { ar(i, f, dict); }
 
 // void Base::serialize(auto &ar, const unsigned int /*version*/)
 // {
@@ -25,6 +25,6 @@ void Base::load(InputArchive &ar) { ar(i, f, dict); }
 
 RTTR_REGISTRATION
 {
-    rttr::registration::class_<Base>("Base").constructor<>()(
+    rttr::registration::class_<BaseNode>("Base").constructor<>()(
         rttr::policy::ctor::as_std_shared_ptr);
 }
