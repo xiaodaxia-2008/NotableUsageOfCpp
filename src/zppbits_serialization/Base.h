@@ -37,6 +37,8 @@ public:
     {
         if (std::ranges::find(m_children, child) == m_children.end()) {
             child->m_parent = shared_from_this();
+            m_first_child = child;
+            m_first_child_weak = child;
             m_children.push_back(std::move(child));
         }
     }
@@ -64,9 +66,16 @@ public:
     virtual void format(fmt::format_context &ctx) const
     {
         auto parent = GetParent();
-        fmt::format_to(ctx.out(), "<{} {} at {} with {} children, parent {}>",
-                       GetClassName(), GetName(), fmt::ptr(this),
-                       GetChildrenCount(), parent ? parent->GetName() : "null");
+        fmt::format_to(
+            ctx.out(),
+            "<{} {} at {} with {} children, parent {}, {}, first: {}, "
+            "first weak: {}>",
+            GetClassName(), GetName(), fmt::ptr(this), GetChildrenCount(),
+            parent ? parent->GetName() : "null",
+            m_children.empty() ? fmt::ptr((void*)0)
+                               : fmt::ptr(m_children.front().get()),
+            fmt::ptr(m_first_child.get()),
+            fmt::ptr(m_first_child_weak.lock().get()));
     }
 
 protected:
@@ -75,6 +84,8 @@ protected:
     std::vector<std::shared_ptr<BaseNode>> m_children;
 
     std::weak_ptr<BaseNode> m_parent;
+    std::shared_ptr<BaseNode> m_first_child;
+    std::weak_ptr<BaseNode> m_first_child_weak;
 };
 
 template <std::derived_from<BaseNode> T>
