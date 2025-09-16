@@ -10,8 +10,6 @@ class ZPPBITS_DUMMY_LIB_DERIVED_EXPORT DerivedNode : public BaseNode
 {
     SIMPLE_REFLECTION(DerivedNode)
 public:
-    DerivedNode() = default;
-
     DerivedNode(std::string name, std::array<float, 3> position)
         : BaseNode(std::move(name)), m_position(std::move(position))
     {
@@ -26,20 +24,22 @@ public:
 
     ~DerivedNode();
 
-    void serialize(OutArchive &ar) const override;
-    void serialize(InArchive &ar) override;
+    void serialize(OutArchive &ar) const;
+
+    void serialize(InArchive &ar);
 
     void format(fmt::format_context &ctx) const override
     {
         auto parent = GetParent();
-        fmt::format_to(ctx.out(),
-                       "<{} {} at {} with {} children, parent {}, position "
-                       "[{:.4g}, {:.4g}, {:.4g}]>",
-                       GetClassName(), GetName(), fmt::ptr(this),
-                       GetChildrenCount(), parent ? parent->GetName() : "null",
+        BaseNode::format(ctx);
+        fmt::format_to(ctx.out(), ", position: [{:.4g}, {:.4g}, {:.4g}]",
                        m_position[0], m_position[1], m_position[2]);
     }
 
 protected:
+    DerivedNode() = default;
+
+    friend class zen::Access;
+
     std::array<float, 3> m_position;
 };

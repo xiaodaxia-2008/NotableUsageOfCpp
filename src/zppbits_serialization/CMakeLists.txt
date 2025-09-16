@@ -1,10 +1,13 @@
 include(GenerateExportHeader)
 
-find_path(ZPP_BITS_INCLUDE_DIRS "zpp_bits.h")
-include_directories(${ZPP_BITS_INCLUDE_DIRS})
+# find_path(ZPP_BITS_INCLUDE_DIRS "zpp_bits.h")
+# include_directories(${ZPP_BITS_INCLUDE_DIRS})
+add_library(zen_serialization SHARED Archive.cpp)
+generate_export_header(zen_serialization)
 
 add_library(zppbits_dummy_lib_base SHARED Base.cpp)
 generate_export_header(zppbits_dummy_lib_base)
+target_link_libraries(zppbits_dummy_lib_base PUBLIC zen_serialization)
 
 add_library(zppbits_dummy_lib_derived SHARED Derived.cpp)
 generate_export_header(zppbits_dummy_lib_derived)

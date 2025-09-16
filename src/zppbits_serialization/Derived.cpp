@@ -6,7 +6,7 @@ DerivedNode::~DerivedNode() {}
 
 void DerivedNode::serialize(OutArchive &ar) const
 {
-    BaseNode::serialize(ar);
+    const_cast<BaseNode *>(static_cast<const BaseNode *>(this))->serialize(ar);
     ar(m_position);
 }
 

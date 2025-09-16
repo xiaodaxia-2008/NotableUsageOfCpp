@@ -3,16 +3,11 @@
 
 BaseNode::~BaseNode() {}
 
-void BaseNode::serialize(OutArchive &ar) const
+template <class Archive>
+void BaseNode::serialize(Archive &ar)
 {
-    // ar(m_name, m_children, m_parent);
-    ar(m_name, m_parent, m_first_child_weak, m_first_child, m_children);
+    ar(m_name, m_parent, m_first_child_weak, m_first_child, m_children, m_id);
 }
 
-void BaseNode::serialize(InArchive &ar)
-{
-    ar(m_name, m_parent, m_first_child_weak, m_first_child, m_children);
-    // ar(m_name, m_children, m_parent);
-    // ar(m_name);
-    // ar(m_parent);
-}
+template ZPPBITS_DUMMY_LIB_BASE_EXPORT void BaseNode::serialize(OutArchive &ar);
+template ZPPBITS_DUMMY_LIB_BASE_EXPORT void BaseNode::serialize(InArchive &ar);

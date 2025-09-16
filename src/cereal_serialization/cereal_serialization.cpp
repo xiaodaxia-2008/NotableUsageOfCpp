@@ -48,12 +48,12 @@ template <> struct fmt::formatter<MyExtendData> : fmt::formatter<std::string>
     }
 };
 
-template <class OutArchive> void serialize(OutArchive &archive, MyData &m)
+template <class Archive> void serialize(Archive &archive, MyData &m)
 {
     archive(CEREAL_NVP(m.name), CEREAL_NVP(m.vec_dbl), CEREAL_NVP(m.umap));
 }
 
-template <class OutArchive> void serialize(OutArchive &archive, MyExtendData &m)
+template <class Archive> void serialize(Archive &archive, MyExtendData &m)
 {
     archive(cereal::base_class<MyData>(&m));
     archive(CEREAL_NVP(m.extend_value));

@@ -15,15 +15,18 @@
 public:                                                                        \
     virtual std::string_view GetClassName() const { return #T; }
 
+using namespace zen;
+
 class ZPPBITS_DUMMY_LIB_BASE_EXPORT BaseNode
     : public std::enable_shared_from_this<BaseNode>
 {
     SIMPLE_REFLECTION(BaseNode)
 
 public:
-    BaseNode() = default;
-
-    BaseNode(std::string name) : m_name(std::move(name)) {}
+    BaseNode(std::string name) : m_name(std::move(name))
+    {
+        m_id = std::make_unique<int>(rand());
+    }
 
     virtual ~BaseNode();
 
@@ -59,27 +62,31 @@ public:
 
     std::size_t GetChildrenCount() const { return m_children.size(); }
 
-    virtual void serialize(OutArchive &ar) const;
-
-    virtual void serialize(InArchive &ar);
+    template <typename Archive>
+    void serialize(Archive &ar);
 
     virtual void format(fmt::format_context &ctx) const
     {
         auto parent = GetParent();
         fmt::format_to(
             ctx.out(),
-            "<{} {} at {} with {} children, parent {}, {}, first: {}, "
-            "first weak: {}>",
+            "{} {} at {} with {} children, parent {}, {}, first: {}, "
+            "first weak: {}, id: {}",
             GetClassName(), GetName(), fmt::ptr(this), GetChildrenCount(),
             parent ? parent->GetName() : "null",
-            m_children.empty() ? fmt::ptr((void*)0)
+            m_children.empty() ? fmt::ptr((void *)0)
                                : fmt::ptr(m_children.front().get()),
             fmt::ptr(m_first_child.get()),
-            fmt::ptr(m_first_child_weak.lock().get()));
+            fmt::ptr(m_first_child_weak.lock().get()), *m_id);
     }
 
 protected:
+    BaseNode() = default;
+    friend class zen::Access;
+
     std::string m_name{"Node"};
+
+    std::unique_ptr<int> m_id;
 
     std::vector<std::shared_ptr<BaseNode>> m_children;
 
