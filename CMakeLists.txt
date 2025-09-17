@@ -8,6 +8,7 @@ option(BUILD_SHARED_LIBS "build shared libs" OFF)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+
 # set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -15,6 +16,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 project(NotableUsageOfCpp VERSION 1.0.0 DESCRIPTION "Some classic usage of C++")
 
-link_libraries(spdlog::spdlog)
+if(MSVC)
+    add_compile_options(/Zc:preprocessor)
+endif()
 
 add_subdirectory(src)

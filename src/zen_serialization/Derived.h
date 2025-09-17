@@ -1,14 +1,13 @@
 #pragma once
 #include "Base.h"
 
-#include <zppbits_dummy_lib_derived_export.h>
+#include <zenser_dummy_lib_derived_export.h>
 
 #include <array>
 #include <span>
 
-class ZPPBITS_DUMMY_LIB_DERIVED_EXPORT DerivedNode : public BaseNode
+class ZENSER_DUMMY_LIB_DERIVED_EXPORT DerivedNode : public BaseNode
 {
-    SIMPLE_REFLECTION(DerivedNode)
 public:
     DerivedNode(std::string name, std::array<float, 3> position)
         : BaseNode(std::move(name)), m_position(std::move(position))
