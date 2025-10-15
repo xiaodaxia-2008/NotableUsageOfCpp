@@ -3,12 +3,12 @@
 
 #include <dummy_lib_derived_export.h>
 
+
 #include <array>
 #include <span>
 
 class DUMMY_LIB_DERIVED_EXPORT DerivedNode : public BaseNode
 {
-    SIMPLE_REFLECTION(DerivedNode)
 public:
     DerivedNode() = default;
 
@@ -27,6 +27,12 @@ public:
     ~DerivedNode();
 
     void serialize(auto &ar, const unsigned int version);
+
+    virtual void format(fmt::format_context &ctx) const
+    {
+        BaseNode::format(ctx);
+        fmt::format_to(ctx.out(), ", DerivedNode: position={}", m_position);
+    }
 
 protected:
     std::array<float, 3> m_position;

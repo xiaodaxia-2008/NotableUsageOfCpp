@@ -14,9 +14,6 @@
 
 #include <fmt/std.h>
 
-CEREAL_REGISTER_TYPE(DerivedNode);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(BaseNode, DerivedNode);
-
 void test_instance()
 {
 
@@ -64,13 +61,18 @@ void test_shared_ptr()
     SPDLOG_INFO("node1: {}", *node1);
 }
 
-namespace fs = std::filesystem;
+struct B { 
+    virtual ~B() = default;
+};
+
+struct D : public B { 
+};
+
 int main()
 {
     spdlog::set_level(spdlog::level::debug);
-    constexpr bool is_abstract = std::is_abstract_v<DerivedNode>;
-
+    constexpr auto n = std::is_empty_v<D>;
+    constexpr auto n2 = sizeof(D);
     test_shared_ptr();
-
     return 0;
 }

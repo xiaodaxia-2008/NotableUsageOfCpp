@@ -8,15 +8,11 @@
 #include <vector>
 
 #include <fmt/format.h>
-
-#define SIMPLE_REFLECTION(T)                                                   \
-public:                                                                        \
-    virtual std::string_view GetClassName() const { return #T; }
+#include <fmt/ranges.h>
 
 class DUMMY_LIB_BASE_EXPORT BaseNode
     : public std::enable_shared_from_this<BaseNode>
 {
-    SIMPLE_REFLECTION(BaseNode)
 
 public:
     BaseNode() = default;
@@ -59,10 +55,16 @@ public:
 
     virtual void format(fmt::format_context &ctx) const
     {
-        auto parent = GetParent();
-        fmt::format_to(ctx.out(), "<{} {} at {} with {} children, parent {}>",
-                       GetClassName(), fmt::ptr(this), GetName(),
-                       GetChildrenCount(), parent ? parent->GetName() : "null");
+        fmt::format_to(ctx.out(), "BaseNode: Addr={}, Name={}", fmt::ptr(this),
+                       GetName());
+        fmt::format_to(ctx.out(), ", Children=[");
+        for (auto &child : m_children) {
+            child->format(ctx);
+        }
+        fmt::format_to(ctx.out(), "]");
+        if (auto parent = GetParent()) {
+            fmt::format_to(ctx.out(), ", Parent={}", parent->GetName());
+        }
     }
 
 protected:

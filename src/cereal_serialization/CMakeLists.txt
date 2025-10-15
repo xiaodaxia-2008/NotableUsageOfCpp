@@ -1,9 +1,10 @@
 include(GenerateExportHeader)
 
-find_package(cereal CONFIG REQUIRED)
+# find_package(cereal CONFIG REQUIRED)
 
-link_libraries(cereal::cereal spdlog::spdlog)
+add_subdirectory(cereal_dll/cereal)
 
+link_libraries(spdlog::spdlog cereal_dll)
 add_library(dummy_lib_base SHARED Base.cpp)
 generate_export_header(dummy_lib_base)
 
