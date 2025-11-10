@@ -104,7 +104,7 @@ namespace cereal
           base_ptr(const_cast<Base*>(static_cast<Base const *>(derived)))
       {
         static_assert( std::is_base_of<Base, Derived>::value, "Can only use base_class on a valid base class" );
-        base_class_detail::RegisterPolymorphicBaseClass<Base, Derived>::bind();
+      static auto dummy = [] () { puts("register polymorphic caster\n") ; base_class_detail::RegisterPolymorphicBaseClass<Base, Derived>::bind(); return 0;} ();
       }
 
         Base * base_ptr;
